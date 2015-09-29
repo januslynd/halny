@@ -1,0 +1,31 @@
+module jl.halny.Reader where
+
+{--
+    Gets the names of the CSV file headers and the splitted lines
+-}
+data Descriptor = Descriptor {
+    --- The CSV header names
+    headerNames :: IO [String],
+    --- The file lines splitted by the provided separator regex
+    lines :: IO [[String]]
+}
+
+{--
+    Parses a CSV file and returns a list of lists
+
+    *e.g:* parse \'\,\' "/somecsv.txt"
+-}
+parse :: Regex -> String -> IO [[String]]
+parse separator filePath = do
+    reader  <- openReader filePath
+    line    <- reader.getLines
+    return $ map (split separator) line
+
+{--
+   Returns a list of words produced by splitting a *String* by
+   using the provided separator.
+
+   *e.g:* split \'\,\' "hello,my,friend"
+-}
+split :: Regex -> String -> [String]
+split separator line = separator.splitted line
