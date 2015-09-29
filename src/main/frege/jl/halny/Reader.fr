@@ -5,18 +5,28 @@ module jl.halny.Reader where
 -}
 data Descriptor = Descriptor {
     --- The CSV header names
-    headerNames :: IO [String],
+    headerNames :: [String],
     --- The file lines splitted by the provided separator regex
-    lines :: IO [[String]]
+    lines :: [[String]]
 }
 
 {--
-    Parses a CSV file and returns a list of lists
-
-    *e.g:* parse \'\,\' "/somecsv.txt"
+    Parses a CSV file and returns a @Descriptor@ with the
+    *headerNames* and the collected *lines*.
 -}
-parse :: Regex -> String -> IO [[String]]
+parse :: Regex -> String -> IO Descriptor
 parse separator filePath = do
+    header <- readLines separator filePath >>= \line -> return $ head line
+    lines  <- readLines separator filePath >>= \line -> return $ drop 1 line
+    return Descriptor { headerNames = header , lines = lines }
+
+{--
+    Reads a CSV file and returns a list of lists
+
+    *e.g:* readLines \'\,\' "/somecsv.txt"
+-}
+readLines :: Regex -> String -> IO [[String]]
+readLines separator filePath = do
     reader  <- openReader filePath
     line    <- reader.getLines
     return $ map (split separator) line
