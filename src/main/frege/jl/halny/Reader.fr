@@ -3,39 +3,22 @@ module jl.halny.Reader where
 {--
     Gets the names of the CSV file headers and the splitted lines
 -}
-data Descriptor = Descriptor {
-    --- The CSV header names
-    headerNames :: [String],
-    --- The file lines splitted by the provided separator regex
-    lines :: [[String]]
-}
+getHeaderNames :: [[String]] -> [String]
+getHeaderNames rows = head rows
 
-{--
-    Parses a CSV file and returns a @Descriptor@ with the
-    *headerNames* and the collected *lines*.
--}
-parse :: Regex -> String -> IO Descriptor
-parse separator filePath = do
-    header <- readLines separator filePath >>= \line -> return $ head line
-    lines  <- readLines separator filePath >>= \line -> return $ drop 1 line
-    return Descriptor { headerNames = header , lines = lines }
+readHeaderRow :: IO [String] -> IO [String]
+readHeaderRow lines = fmap (parseRowWithComma . head) lines
 
-{--
-    Reads a CSV file and returns a list of lists
+readRows :: IO [String] -> IO [[String]]
+readRows rows = fmap (map parseRowWithComma) $ fmap tail rows
 
-    *e.g:* readLines \'\,\' "/somecsv.txt"
--}
-readLines :: Regex -> String -> IO [[String]]
-readLines separator filePath = do
-    reader  <- openReader filePath
-    line    <- reader.getLines
-    return $ map (split separator) line
+parseRow :: Regex -> String -> [String]
+parseRow separator line = separator.splitted line
 
-{--
-   Returns a list of words produced by splitting a *String* by
-   using the provided separator.
+parseRowWithComma :: String -> [String]
+parseRowWithComma = parseRow '\,'
 
-   *e.g:* split \'\,\' "hello,my,friend"
--}
-split :: Regex -> String -> [String]
-split separator line = separator.splitted line
+getRows :: IO [String] -> IO [[String]] -> IO [[(String,String)]]
+getRows headers rows = headers >>= \h -> rows >>= \r -> return $ fmap (zip h) r
+
+--- parse :: String -> IO [[(String,String)]]
