@@ -1,11 +1,5 @@
 module jl.halny.Reader where
 
-{--
-    Gets the names of the CSV file headers and the splitted lines
--}
-getHeaderNames :: [[String]] -> [String]
-getHeaderNames rows = head rows
-
 readHeaderRow :: IO [String] -> IO [String]
 readHeaderRow lines = fmap (parseRowWithComma . head) lines
 
