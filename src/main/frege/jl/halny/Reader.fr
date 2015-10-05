@@ -1,10 +1,10 @@
 module jl.halny.Reader where
 
-readHeaderRow :: IO [String] -> IO [String]
-readHeaderRow lines = fmap (parseRowWithComma . head) lines
+readHeaderRow :: [String] -> [String]
+readHeaderRow lines = parseRowWithComma $ head lines
 
-readRows :: IO [String] -> IO [[String]]
-readRows rows = fmap (map parseRowWithComma) $ fmap tail rows
+readRows :: [String] -> [[String]]
+readRows rows = map parseRowWithComma $ tail rows
 
 parseRow :: Regex -> String -> [String]
 parseRow separator line = separator.splitted line
@@ -12,7 +12,14 @@ parseRow separator line = separator.splitted line
 parseRowWithComma :: String -> [String]
 parseRowWithComma = parseRow '\,'
 
-getRows :: IO [String] -> IO [[String]] -> IO [[(String,String)]]
-getRows headers rows = headers >>= \h -> rows >>= \r -> return $ fmap (zip h) r
+getRows :: [String] -> [[String]] -> [[(String,String)]]
+getRows headers rows = fmap (zip headers) rows
 
---- parse :: String -> IO [[(String,String)]]
+parse :: String -> IO [[(String,String)]]
+parse filePath = do
+    reader   <- openReader filePath
+    lines    <- reader.getLines
+    let headers = readHeaderRow lines
+        rows    = readRows lines
+
+    return $ getRows headers rows
