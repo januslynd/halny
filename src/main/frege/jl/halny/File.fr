@@ -1,5 +1,9 @@
 module jl.halny.File where
 
+{--
+    Reads safely a given file. If the file doesn't exist
+    it still will return an empty list
+-}
 readLines :: String -> IO [String]
 readLines filePath = openReader filePath >>= _.getLines
     `catch` (\(e :: FileNotFoundException) -> return [])
