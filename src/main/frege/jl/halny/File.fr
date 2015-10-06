@@ -1,0 +1,5 @@
+module jl.halny.File where
+
+readLines :: String -> IO [String]
+readLines filePath = openReader filePath >>= _.getLines
+    `catch` (\(e :: FileNotFoundException) -> return [])
