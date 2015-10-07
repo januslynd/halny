@@ -14,26 +14,33 @@ comma = '\,'
     Parses the file located at the *filePath* passes as *first*
     argument, and maps headers from the first line with the
     rest of the file returning a list of rows represented by
-    list of tuples. e.g. A given file with the following lines:
+    list of tuples.
+-}
+parseFile :: Maybe Regex -> String -> IO [[(String,String)]]
+parseFile separator filePath = do
+    lines       <- readLines filePath
+    return $ parse separator lines
 
-    - "name, job"
-    - "john, engineer"
-    - "tony, waiter"
+{--
+    Parses a list and returns a list of tuples mapping
+    headers with the rest of the entries of the list.
+
+    e.g. A given list with the following lines:
+
+    - ["name, job", "john, engineer", "tony, waiter"]
 
     *Should return* a structure like:
 
-    [[("name", "john"), ("job", "engineer")], [("name", "tony"), ("job", "waiter")]]
+    - [[("name", "john"), ("job", "engineer")], [("name", "tony"), ("job", "waiter")]]
 
     By default if a *Nothing* value is passed as separator, the *comma*
     value will be used as splitter.
 -}
-parse :: Maybe Regex -> String -> IO [[(String,String)]]
-parse separator filePath = do
-    lines       <- readLines filePath
-    let splitter = maybe comma id separator
-        headers  = readHeaderRow splitter lines
-        rows     = readRows splitter lines
-    return $ getRows headers rows
+parse :: Maybe Regex -> [String] -> [[(String,String)]]
+parse separator stream = getRows headers rows
+    where splitter = maybe comma id separator
+          headers  = readHeaderRow splitter stream
+          rows     = readRows splitter stream
 
 {--
     Given a list of lines gets the first one, parses
