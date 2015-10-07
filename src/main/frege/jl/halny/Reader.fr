@@ -41,7 +41,8 @@ parse separator filePath = do
     is passed as first argument.
 -}
 readHeaderRow :: Regex -> [String] -> [String]
-readHeaderRow separator lines = parseRow separator $ head lines
+readHeaderRow separator []     = []
+readHeaderRow separator (x:xs) = parseRow separator x
 
 {--
     Given a list of lines gets the all but the first one, parses
@@ -49,7 +50,8 @@ readHeaderRow separator lines = parseRow separator $ head lines
     the separator passed as first parameter
 -}
 readRows :: Regex -> [String] -> [[String]]
-readRows separator rows = map (parseRow separator) $ safeTail rows
+readRows separator []     = []
+readRows separator (x:xs) = map (parseRow separator) xs
 
 {--
     Splits a given String by using the separator passed
