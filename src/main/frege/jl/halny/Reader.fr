@@ -4,8 +4,7 @@
 -}
 module jl.halny.Reader where
 
-import jl.halny.File
-import jl.halny.Util
+import jl.halny.File (readLines)
 
 comma :: Regex
 comma = '\,'
