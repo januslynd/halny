@@ -2,9 +2,9 @@
     This module has a set of functions aimed to *parse CSVs* files from
     different kind of sources to return a list of tuples.
 -}
-module jl.halny.Reader where
+module jl.halny.Halny where
 
-import jl.halny.File (readLines)
+import jl.halny.IO (readLines)
 
 comma :: Regex
 comma = '\,'
