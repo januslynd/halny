@@ -1,0 +1,35 @@
+{--
+    Records can be used to parse and collect information from a
+    CSV file as long as the names of the headers match
+-}
+module halny.Record where
+
+{--
+   Abstraction about how a type of record should behave. A record
+   should give information about headers and a mechanism to get a
+   specific value by its header name.
+-}
+class Record a where
+  --- Gets the val of the field which name is passed as first param
+  field    :: String -> a -> String
+  --- Gets all header names from the current record
+  headers  :: a -> [String]
+
+--- Type of records coming from CSV files
+data CsvRecord = CsvRecord [(String,String)]
+
+--- All CsvRecord is a Show type as well
+derive Show CsvRecord
+
+{-
+    Instance of the type-class Record for records coming from a CSV
+    estructure
+--}
+instance Record CsvRecord where
+  field name a = case a of
+    CsvRecord [] -> empty
+    CsvRecord xs -> (snd . head) $ filter ((==name) . fst) xs
+
+  headers    a = case a of
+    CsvRecord [] -> []
+    CsvRecord xs -> map fst xs

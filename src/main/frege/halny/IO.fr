@@ -1,7 +1,7 @@
 {--
     Functions for dealing with IO
 -}
-module jl.halny.IO where
+module halny.IO where
 
 {--
     Reads safely a given file. If the file doesn't exist
