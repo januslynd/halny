@@ -9,11 +9,13 @@ module halny.Record where
    should give information about headers and a mechanism to get a
    specific value by its header name.
 -}
+-- tag::recordTypeClass[]
 class Record a where
   --- Gets the val of the field which name is passed as first param
   field    :: String -> a -> String
   --- Gets all header names from the current record
   headers  :: a -> [String]
+-- end::recordTypeClass[]
 
 --- Type of records coming from CSV files
 data CsvRecord = CsvRecord [(String,String)]
@@ -25,6 +27,7 @@ derive Show CsvRecord
     Instance of the type-class Record for records coming from a CSV
     estructure
 --}
+-- tag::csvRecordInstance[]
 instance Record CsvRecord where
   field name a = case a of
     CsvRecord [] -> empty
@@ -33,3 +36,4 @@ instance Record CsvRecord where
   headers    a = case a of
     CsvRecord [] -> []
     CsvRecord xs -> map fst xs
+-- end::csvRecordInstance[]

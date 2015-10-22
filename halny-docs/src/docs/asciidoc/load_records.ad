@@ -1,6 +1,10 @@
-== Loading records
+== Loading data
 
-By default Halny parses files using `,` separator. The function used for
+By default Halny parses files using `,` separator.
+
+=== From a file
+
+The function used for
 loading records from a file is `parseFile`:
 
 [source, haskell]
@@ -8,9 +12,60 @@ loading records from a file is `parseFile`:
 include::{coreSrc}/halny/Halny.fr[tags=parseFile]
 ----
 
+`parseFile` receives:
+
+- regex of the field separator
+- file path
+
+And eventually will return a list of lists, containing tuples
+representing (`fieldName`, `fieldValue`).
+
 The example module loads a list of Nba results:
 
 [source, haskell]
 ----
 include::{sampleSrc}/Nba.fr[tags=loadCsvRecords]
+----
+
+In this case tuples are mapped to become `CsvRecord` instances.
+
+=== From a data structure
+
+If you only wanted to parse a data structure of type `[[(String,String]]`
+the you can only just use `parse`:
+
+[source, haskell]
+----
+include::{coreSrc}/halny/Halny.fr[tags=parseFile]
+----
+
+The parameters are:
+
+- The separator as a regex
+- A list of String containing data separated by the separator regex
+
+And eventually it will return a list of lists.
+
+== Record type class
+
+Although having raw data is fine, sometimes it would be better to have
+a higher abstraction to deal with it.
+
+`Record` is a type class created to deal with data coming from `csv`
+files.  You can think of `Record` as the representation of a row of a
+given data store.
+
+You can use a given set of functions over a `Record`:
+
+[source, haskell]
+----
+include::{coreSrc}/halny/Record.fr[tags=recordTypeClass]
+----
+
+There is a default instance of `Record` called `CsvRecord` which maps
+a given csv file row.
+
+[source, haskell]
+----
+include::{coreSrc}/halny/Record.fr[tags=csvRecordInstance]
 ----
