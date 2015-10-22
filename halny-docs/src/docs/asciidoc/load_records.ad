@@ -1,0 +1,16 @@
+== Loading records
+
+By default Halny parses files using `,` separator. The function used for
+loading records from a file is `parseFile`:
+
+[source, haskell]
+----
+include::{coreSrc}/halny/Halny.fr[tags=parseFile]
+----
+
+The example module loads a list of Nba results:
+
+[source, haskell]
+----
+include::{sampleSrc}/Nba.fr[tags=loadCsvRecords]
+----

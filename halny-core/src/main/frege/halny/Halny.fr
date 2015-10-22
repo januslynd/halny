@@ -15,10 +15,12 @@ comma = '\,'
     rest of the file returning a list of rows represented by
     list of tuples.
 -}
+-- tag::parseFile[]
 parseFile :: Maybe Regex -> String -> IO [[(String,String)]]
 parseFile separator filePath = do
     lines       <- readLines filePath
     return $ parse separator lines
+-- end::parseFile[]
 
 {--
     Parses a list and returns a list of tuples mapping

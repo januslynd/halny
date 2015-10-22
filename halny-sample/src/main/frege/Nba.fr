@@ -1,0 +1,11 @@
+module Nba where
+
+import halny.Halny
+import halny.Record
+
+-- tag::loadCsvRecords[]
+load :: String -> IO [CsvRecord]
+load filePath = do
+   results <- parseFile Nothing filePath
+   return $ map (CsvRecord) results
+-- end::loadCsvRecords[]

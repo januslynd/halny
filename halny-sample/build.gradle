@@ -1,0 +1,12 @@
+apply plugin: 'java'
+apply plugin: 'frege'
+
+dependencies {
+    compile project(":halny-core")
+
+    compile libraries.slf4j
+    testCompile libraries.junit
+    testCompile libraries.hamcrest
+}
+
+compileFrege.dependsOn 'compileJava'

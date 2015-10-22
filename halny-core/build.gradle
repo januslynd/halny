@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'frege'
+
+dependencies {
+    compile libraries.frege_core
+    compile libraries.frege_repl
+    compile libraries.frege_nati
+
+    compile libraries.slf4j
+    testCompile libraries.junit
+    testCompile libraries.hamcrest
+}
+
+compileFrege.dependsOn 'compileJava'
