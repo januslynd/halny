@@ -1,0 +1,3 @@
+include 'halny-core'
+include 'halny-sample'
+include 'halny-docs'

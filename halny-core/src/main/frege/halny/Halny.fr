@@ -15,10 +15,12 @@ comma = '\,'
     rest of the file returning a list of rows represented by
     list of tuples.
 -}
+-- tag::parseFile[]
 parseFile :: Maybe Regex -> String -> IO [[(String,String)]]
 parseFile separator filePath = do
     lines       <- readLines filePath
     return $ parse separator lines
+-- end::parseFile[]
 
 {--
     Parses a list and returns a list of tuples mapping
@@ -35,11 +37,13 @@ parseFile separator filePath = do
     By default if a *Nothing* value is passed as separator, the *comma*
     value will be used as splitter.
 -}
+-- tag::parse[]
 parse :: Maybe Regex -> [String] -> [[(String,String)]]
 parse separator stream = getRows headers rows
     where splitter = maybe comma id separator
           headers  = readHeaderRow splitter stream
           rows     = readRows splitter stream
+-- end::parse[]
 
 {--
     Given a list of lines gets the first one, parses
